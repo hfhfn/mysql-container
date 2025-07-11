@@ -1,0 +1,25 @@
+#version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql8
+    environment:
+      # todo 此处如果之前创建过容器，必须删除卷，并删除卷映射的本地文件，新创建容器时才会新建用户和数据库
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_USER=mysql
+      - MYSQL_PASSWORD=123456
+      - MYSQL_DATABASE=openmemory
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./log:/var/log/mysql
+      - ./data:/var/lib/mysql
+      - ./conf.d:/etc/mysql/conf.d
+      - ./mysql_run:/var/run/mysqld  # 解决PID文件警告
+    ports:
+      - "3306:3306"
+    restart: always
+    command: [
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci"
+    ]
